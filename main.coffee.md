@@ -58,8 +58,6 @@ method always returns an Array.
       (object) ->
         for component in components
           [type, id, attr, value] = component
-          
-          console.log component
 
           idMatch = !id or (id is get(object, "id"))
           typeMatch = !type or defaultTypeMatch(type, object)
