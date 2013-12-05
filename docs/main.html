@@ -46,15 +46,17 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Get a selection of objects that match the specified selector criteria. 
-The selector language can select objects by id, type, or attributes. This 
+              <p>Get a selection of objects that match the specified selector criteria.
+The selector language can select objects by id, type, or attributes. This
 method always returns an Array.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">    find: (objects, selector) -&gt;
+            <div class="content"><pre><code class="lang-coffeescript">    find: (objects, selector, typeMatcher) -&gt;
       results = []
 
-      matcher = generate(selector)
+      console.log selector, typeMatcher
+
+      matcher = generate(selector, typeMatcher)
 
       objects.forEach (object) -&gt;
         results.push object <span class="keyword">if</span> matcher object
@@ -89,10 +91,10 @@ method always returns an Array.</p>
   <span class="keyword">else</span>
     value
 
-<span class="function"><span class="title">defaultTypeMatch</span></span> = (type, object) -&gt;
+<span class="function"><span class="title">defaultTypeMatcher</span></span> = (type, object) -&gt;
   type <span class="keyword">is</span> get(object, <span class="string">"class"</span>)
 
-<span class="function"><span class="title">generate</span></span> = (selector=<span class="string">""</span>, typeMatch=defaultTypeMatch) -&gt;
+<span class="function"><span class="title">generate</span></span> = (selector=<span class="string">""</span>, typeMatcher=defaultTypeMatcher) -&gt;
   components = parseSelector(selector).map (piece) -&gt;
     process(piece)
 
@@ -100,10 +102,8 @@ method always returns an Array.</p>
     <span class="keyword">for</span> component <span class="keyword">in</span> components
       [type, id, attr, value] = component
 
-      console.log component
-
       idMatch = !id <span class="keyword">or</span> (id <span class="keyword">is</span> get(object, <span class="string">"id"</span>))
-      typeMatch = !type <span class="keyword">or</span> defaultTypeMatch(type, object)
+      typeMatch = !type <span class="keyword">or</span> typeMatcher(type, object)
 
       <span class="keyword">if</span> attr
         <span class="keyword">if</span> value?
