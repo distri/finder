@@ -35,7 +35,6 @@ describe "Finder", ->
     results = finder.find [
       type: "duder"
     ], "duder", (type, object) ->
-      console.log "matching!"
       object.type is type
 
     assert.equal results[0].type, "duder"

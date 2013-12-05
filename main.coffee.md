@@ -13,8 +13,6 @@ method always returns an Array.
         find: (objects, selector, typeMatcher) ->
           results = []
 
-          console.log selector, typeMatcher
-
           matcher = generate(selector, typeMatcher)
 
           objects.forEach (object) ->
