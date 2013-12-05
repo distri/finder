@@ -6,14 +6,16 @@ Use a query language to filter an array of objects.
     module.exports = (I={}, self=Core(I)) ->
       self.extend
 
-Get a selection of objects that match the specified selector criteria. 
-The selector language can select objects by id, type, or attributes. This 
+Get a selection of objects that match the specified selector criteria.
+The selector language can select objects by id, type, or attributes. This
 method always returns an Array.
 
-        find: (objects, selector) ->
+        find: (objects, selector, typeMatcher) ->
           results = []
 
-          matcher = generate(selector)
+          console.log selector, typeMatcher
+
+          matcher = generate(selector, typeMatcher)
 
           objects.forEach (object) ->
             results.push object if matcher object
@@ -48,10 +50,10 @@ method always returns an Array.
       else
         value
 
-    defaultTypeMatch = (type, object) ->
+    defaultTypeMatcher = (type, object) ->
       type is get(object, "class")
 
-    generate = (selector="", typeMatch=defaultTypeMatch) ->
+    generate = (selector="", typeMatcher=defaultTypeMatcher) ->
       components = parseSelector(selector).map (piece) ->
         process(piece)
 
@@ -60,7 +62,7 @@ method always returns an Array.
           [type, id, attr, value] = component
 
           idMatch = !id or (id is get(object, "id"))
-          typeMatch = !type or defaultTypeMatch(type, object)
+          typeMatch = !type or typeMatcher(type, object)
 
           if attr
             if value?
